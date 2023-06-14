@@ -13,12 +13,12 @@ def load_dict(dict_name):
         data = pickle.load(file)
     return data
 
-regions_top100 = load_dict('../regions_top100.pkl')
-topics = load_dict('../topics.pkl')
-topics_minus_geo = load_dict('../topics_minus_geo.pkl')
-regions_per_lang = load_dict('../regions_per_lang.pkl')
-topics_langs_relevant100 = load_dict('../topics_langs_relevant.pkl')
-topics_minus_geo_top100 = load_dict('../topics_minus_geo_top100.pkl')
+regions_top100 = load_dict('regions_top100.pkl')
+topics = load_dict('topics.pkl')
+topics_minus_geo = load_dict('topics_minus_geo.pkl')
+regions_per_lang = load_dict('regions_per_lang.pkl')
+topics_langs_relevant100 = load_dict('topics_langs_relevant.pkl')
+topics_minus_geo_top100 = load_dict('topics_minus_geo_top100.pkl')
 '''
 regressor = data["model"]
 le_country = data["le_country"]
