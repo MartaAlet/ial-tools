@@ -4,4 +4,4 @@ scikit-learn
 matplotlib
 seaborn
 plotly
-pandas
+pandas<2.0.0
