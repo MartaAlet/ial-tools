@@ -4,3 +4,4 @@ scikit-learn
 matplotlib
 seaborn
 plotly
+pandas == 0.23.3
