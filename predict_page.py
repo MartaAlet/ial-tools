@@ -8,11 +8,21 @@ import plotly
 import plotly.graph_objects as go
 import plotly.offline as pyo
 
+'''
 def load_dict(dict_name):
     with open(dict_name, 'rb') as file:
         data = pickle.load(file)
+    return data'''
+def load_dict(dict_name):
+    data = pd.read_pickle(dict_name)
     return data
-
+'''
+regions_top100 = load_dict('regions_top100.pkl')
+topics = load_dict('topics.pkl')
+topics_minus_geo = load_dict('topics_minus_geo.pkl')
+regions_per_lang = load_dict('regions_per_lang.pkl')
+topics_langs_relevant100 = load_dict('topics_langs_relevant.pkl')
+topics_minus_geo_top100 = load_dict('topics_minus_geo_top100.pkl')'''
 regions_top100 = load_dict('regions_top100.pkl')
 topics = load_dict('topics.pkl')
 topics_minus_geo = load_dict('topics_minus_geo.pkl')
