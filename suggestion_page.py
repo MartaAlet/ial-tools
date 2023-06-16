@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.cluster import AgglomerativeClustering
 import plotly.express as px
 import numpy as np
-
+import pageviewapi
 @st.cache
 def load_data(file_name):
     df = pd.read_csv(file_name)
