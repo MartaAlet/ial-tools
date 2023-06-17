@@ -23,7 +23,8 @@ topics = load_dict('geo_views.pkl')
 def show_worldviews_page():
     st.markdown("<h1 style='text-align: center; color: #307473;'>Views per country</h1>", unsafe_allow_html=True)
     st.write("""## Geographic distribution of views""")
-        
+    list_of_langs = ['en', 'es', 'ca', 'simple', 'eo', 'io', 'ia', 'vo', 'ie', 'nov']
+    lang_to_language={'simple':'Simple English', 'eo':'Esperanto', 'io':'Ido', 'vo':'Volapuk', 'ia':'Interlingua', 'ie':'Interlingue', 'nov':'Novial', 'en': 'English', 'es':'Spanish', 'ca':'Catalan'}
     for lang in list_of_langs:
         language = lang_to_language[lang]
         fig = px.choropleth(views_per_country_df[lang], locations="Alpha-3 code",

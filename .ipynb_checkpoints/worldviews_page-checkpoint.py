@@ -5,28 +5,31 @@ import seaborn as sns
 from sklearn.cluster import AgglomerativeClustering
 import plotly.express as px
 import pypopulation
+import pickle
 
 @st.cache
 def load_data(file_name):
     df = pd.read_csv(file_name)
     return df
-
-df = load_data('mean_predicted_quality.csv')
-df=df.drop(columns=['Unnamed: 0'])
-df_qualities_features_top100 = load_data('df_qualities_features_top100.csv')
+def load_dict(dict_name):
+    data = pd.read_pickle(dict_name)
+    return data
+topics = load_dict('geo_views.pkl')
+#df = load_data('mean_predicted_quality.csv')
+#df=df.drop(columns=['Unnamed: 0'])
+#df_qualities_features_top100 = load_data('df_qualities_features_top100.csv')
 
 
 def show_worldviews_page():
     st.markdown("<h1 style='text-align: center; color: #307473;'>Views per country</h1>", unsafe_allow_html=True)
-    
-    st.write("""## Mean Predicted Quality""")
-    
-    col0, col1 = st.columns(2)
-    col0.dataframe(df)
-    fig = px.bar(df, x="language", y="mean predicted quality", color="language", title="Mean Predicted Quality")
-    col1.plotly_chart(fig)
-    st.write("""## Analysis for the top 100 articles of each IAL""")
-    features = ['length (bytes)', 'media', 'wikilinks', 'categories', 'headings', 'references']
-    for feature in features:
-        fig = px.bar(df_qualities_features_top100[df_qualities_features_top100['feature']==feature], x="language", y="count", color="language", title=feature+" count for each IAL")
+    st.write("""## Geographic distribution of views""")
+    list_of_langs = ['en', 'es', 'ca', 'simple', 'eo', 'io', 'ia', 'vo', 'ie', 'nov']
+    lang_to_language={'simple':'Simple English', 'eo':'Esperanto', 'io':'Ido', 'vo':'Volapuk', 'ia':'Interlingua', 'ie':'Interlingue', 'nov':'Novial', 'en': 'English', 'es':'Spanish', 'ca':'Catalan'}
+    for lang in list_of_langs:
+        language = lang_to_language[lang]
+        fig = px.choropleth(views_per_country_df[lang], locations="Alpha-3 code",
+                            color="Views/Population", 
+                            hover_name="Country",
+                            color_continuous_scale=px.colors.sequential.Plasma,
+                            title = "Views/Population per country of the "+language+" Wikipedia")
         st.plotly_chart(fig)
