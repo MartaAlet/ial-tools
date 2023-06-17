@@ -6,3 +6,4 @@ seaborn
 plotly
 pandas == 2.0
 pageviewapi
+pypopulation

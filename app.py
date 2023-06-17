@@ -3,7 +3,7 @@ st.set_page_config(layout="wide", page_title="Tools for the IAL community")
 from predict_page import show_predict_page
 from explore_page import show_explore_page
 from suggestion_page import show_suggestion_page
-
+from worldviews_page import show_worldviews_page
 page = st.sidebar.selectbox("Choose a page", ("Topic Comparison", "Quality Comparison", "Views per country", "Suggestion Page"))
 
 if page == "Topic Comparison":
@@ -13,4 +13,4 @@ elif page == "Quality Comparison":
 elif page == "Suggestion Page":
     show_suggestion_page()
 else:
-    show_explore_page()
+    show_worldviews_page()
