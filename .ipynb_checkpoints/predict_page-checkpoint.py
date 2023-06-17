@@ -17,35 +17,6 @@ def load_dict(dict_name):
     data = pd.read_pickle(dict_name)
     return data
 
-def footer():
-    footer="""<style>
-    a:link , a:visited{
-    color: blue;
-    background-color: transparent;
-    text-decoration: underline;
-    }
-
-    a:hover,  a:active {
-    color: red;
-    background-color: transparent;
-    text-decoration: underline;
-    }
-
-    .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: white;
-    color: black;
-    text-align: center;
-    }
-    </style>
-    <div class="footer">
-    <p>Developed by <a style='display: block; text-align: center;' href="https://www.mediawiki.org/w/index.php?title=User:MartaAlet" target="_blank">Marta Alet Puig</a></p>
-    </div>
-    """
-
 '''
 regions_top100 = load_dict('regions_top100.pkl')
 topics = load_dict('topics.pkl')
@@ -191,4 +162,3 @@ def show_predict_page():
     col4.plotly_chart(display_scatter_polar(regions_per_lang_, 'topic', 'value', 'Geography.Regions comparison'))
     col5.plotly_chart(display_scatter_polar(regions_top100, 'topic', 'score', 'Geography.Regions comparison - Top 100 articles'))
         
-    footer()
