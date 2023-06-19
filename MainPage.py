@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.cluster import AgglomerativeClustering
 import plotly.express as px
 
-@st.cache(suppress_st_warning=True)
+#@st.cache(suppress_st_warning=True)
 
 
 def show_main_page():

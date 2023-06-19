@@ -17,7 +17,7 @@ df_qualities_features_top100 = load_data('df_qualities_features_top100.csv')
 
 def show_explore_page():
     st.markdown("<h1 style='text-align: center; color: #307473;'>Quality Comparison</h1>", unsafe_allow_html=True)
-    
+    st.write("Using the [Language-agnostic Quality Prediction API](https://wiki-topic.toolforge.org/quality) developed by Isaac (WMF) as part of Wikimedia Research,  we can predict the quality of an article. The API returns for a title and a language code a predicted quality score, and the features that the article has: the amount of categories, headings, media items, references, and wikilinks, as well as the article’s length.")
     st.write("""## Mean Predicted Quality""")
     
     col0, col1 = st.columns(2)
