@@ -7,7 +7,7 @@ plotly
 pandas == 2.0
 pageviewapi
 pypopulation
-sklearn
+scikit-learn
 xgboost == 1.0.2
 requests
 json
