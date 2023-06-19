@@ -290,7 +290,6 @@ def show_suggestions(slider_val, list_top=['Cat', 'Dog', 'Tiger']):
 
     for percent_complete in range(100):
         time.sleep(0.1)
-        st.write(progress_text)
         my_bar.progress(percent_complete + 1)
     st.markdown("<h1 style='text-align: center; color: #307473;'>Results:</h1>", unsafe_allow_html=True)
     col0, col1, col2 = st.columns(3)
