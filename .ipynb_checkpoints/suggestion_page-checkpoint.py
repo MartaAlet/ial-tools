@@ -299,8 +299,9 @@ def get_input_data(lang, my_bar):
                     print(article['title'],  timestamp, lang2, views)
                     mean_, median_, sum_, peak = compute_features_views(views)
                     b = sum_>=threshold[lang2]
-                    df2 = df2.append({'Qid' : article['qid'], 'views_mean_'+lang2 : mean_, 'views_median_'+lang2 : median_, 'views_sum_'+lang2:sum_, 'views_peak_'+lang2:peak, 'is_top_'+lang2:b}, ignore_index = True)
-
+                    #df2 = df2.append(, ignore_index = True)
+                    row = {'Qid' : article['qid'], 'views_mean_'+lang2 : mean_, 'views_median_'+lang2 : median_, 'views_sum_'+lang2:sum_, 'views_peak_'+lang2:peak, 'is_top_'+lang2:b}
+                    df2 = pd.concat(df2, row, axis=0)
         else:
             for article in top100:
                 qid = get_wikipedia_qid(article, lang2)
