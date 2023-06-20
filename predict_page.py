@@ -17,68 +17,14 @@ def load_dict(dict_name):
     data = pd.read_pickle(dict_name)
     return data
 
-'''
-regions_top100 = load_dict('regions_top100.pkl')
-topics = load_dict('topics.pkl')
-topics_minus_geo = load_dict('topics_minus_geo.pkl')
-regions_per_lang = load_dict('regions_per_lang.pkl')
-topics_langs_relevant100 = load_dict('topics_langs_relevant.pkl')
-topics_minus_geo_top100 = load_dict('topics_minus_geo_top100.pkl')'''
 regions_top100 = load_dict('regions_top100.pkl')
 topics = load_dict('topics.pkl')
 topics_minus_geo = load_dict('topics_minus_geo.pkl')
 regions_per_lang = load_dict('regions_per_lang.pkl')
 topics_langs_relevant100 = load_dict('topics_langs_relevant.pkl')
 topics_minus_geo_top100 = load_dict('topics_minus_geo_top100.pkl')
-'''
-regressor = data["model"]
-le_country = data["le_country"]
-le_education = data["le_education"]
+#df_topics = pd.read_csv("topicsForAllWikidataItems2023-01-16_ials_plus_en_es_ca.csv.gz")
 
-def cluster_data(data):
-    clustering = AgglomerativeClustering(linkage='ward', n_clusters=5).fit(data[['Annual_income','Spending_score']])
-    cluster_id = clustering.labels_
-    return cluster_id
-    
-def predict_cluster_id(point, data, cluster_id):
-    dict_distances = dict()
-    cluster_ids = [0,1,2,3,4]
-    for cluster in cluster_ids:
-        data_cluster=data.iloc[[x for x in range(len(cluster_id)) if cluster_id[x]==cluster]]
-        mean_ai = data_cluster['Annual_income'].mean()
-        mean_ss = data_cluster['Spending_score'].mean()
-        centroid = np.array([mean_ai, mean_ss])
-        dict_distances[cluster] = np.linalg.norm(point - centroid)
-    return min(dict_distances, key=dict_distances.get)
-
-def load_data():
-    df = pd.read_table('../topics_all_wikipedia_articles_202012_SAMPLE_1pct.tsv')
-    return df
-
-data = load_data()
-
-def display_metrics_cluster(cluster, cluster_id, data):
-    data_cluster=data.iloc[[x for x in range(len(cluster_id)) if cluster_id[x]==cluster]]
-    max_ai=data_cluster['Annual_income'].max()
-    min_ai=data_cluster['Annual_income'].min()
-    std_ai=data_cluster['Annual_income'].std()
-
-    max_ss=data_cluster['Spending_score'].max()
-    min_ss=data_cluster['Spending_score'].min()
-    std_ss=data_cluster['Spending_score'].std()
-    st.write(f"#### Cluster {cluster} metrics") 
-    col0, col1, col2, col3 = st.columns(4)
-    col0.write("**Annual\n Income:**")
-    col1.metric("Maximum", str(max_ai), "%.2f" % (max_ai-60.56))
-    col2.metric("Minimum", str(min_ai), "%.2f" % (min_ai-60.56))
-    col3.metric("Standard Deviation", "%.2f" %(std_ai), "")
-    col0, col1, col2, col3 = st.columns(4)
-    col0.write("**Spending\n Score:**")
-    col1.metric("Maximum", str(max_ss), "%.2f" % (max_ss-50.2))
-    col2.metric("Minimum", str(min_ss), "%.2f" % (min_ss-50.2))
-    col3.metric("Standard Deviation", "%.2f" %(std_ss), "")
-    
-'''
 def display_scatter_polar(dic, topic, score, title):
     lang_to_language={'simple':'Simple English', 'eo':'Esperanto', 'io':'Ido', 'vo':'Volapuk', 'ia':'Interlingua', 'ie':'Interlingue', 'nov':'Novial'}
     data=[]
@@ -100,6 +46,17 @@ def display_scatter_polar(dic, topic, score, title):
 
     return fig
 
+def rename_col_1(col_name):
+    list_ = col_name.split('.')
+    return list_[0]
+def rename_col_2(col_name):
+    list_ = col_name.split('.')
+    return list_[1]
+def rename_col_3(col_name):
+    list_ = col_name.split('.')
+    if len(list_)<3:
+        return list_[1]
+    return list_[2]
 
 def show_predict_page():
     st.markdown("<h1 style='text-align: center; color: #307473;'>Topic comparison among IALs</h1>", unsafe_allow_html=True)
@@ -115,44 +72,6 @@ def show_predict_page():
     col2.plotly_chart(display_scatter_polar(topics_minus_geo, 'topic', 'value', 'Topics comparison (Without Geography.Regions)'))
     col3.plotly_chart(display_scatter_polar(topics_minus_geo_top100, 'topic', 'score', 'Topics comparison (Without Geography.Regions) - Top 100 articles'))
     st.markdown("<h3 style='text-align: left; color: #307473;'>Regions of articles for each IAL:</h3>", unsafe_allow_html=True)
-    '''
-    fig, ax = plt.subplots()
-    
-    cluster_id = cluster_data(data)
-    
-    scatter=ax.scatter(data.Annual_income, data.Spending_score, c=cluster_id, cmap ='rainbow') 
-    plt.title('Clustering of Annual income per Spending_score')
-    plt.xlabel('Annual income')
-    plt.ylabel('Spending_score')
-    ax.legend(*scatter.legend_elements(),loc="upper right", title="Clusters")
-    st.pyplot(fig)
-    st.markdown("<h3 style='text-align: left; color: #307473;'>We need some information to predict the cluster ID of a customer:</h3>", unsafe_allow_html=True)
-    
-    annual_income = st.text_input('Annual Income')
-    spending_score = st.slider("Spending Score", 0, 160, 3)
-
-    ok = st.button("Calculate Cluster ID")
-    text = dict()
-    text[0] = "This group is composed by people with high annual income but low spending score. What the metrics tells us about this group of people is that even though they have high salaries, they refrain from spending a lot of money."
-    text[1] = "This group has people who are in the middle of both the spending score and annual income ranges (they are the average customer). We find that this is the largest group out of the five. So even though this group has average metrics, it's highly valuable because it's the most common group and where we will find the largest amount of customers, so pleasing them should be important to the company."
-    text[2] = "This group contains the customers that have high annual incomes and high spending scores. This maybe be the most important one of them all simply based on their high spending scores."
-    text[3] = "This group has customers that have high spending scores despite their low salaries. Their are appealing to the company because of their high spendings."
-    text[4] = "This group has low annual income and spending socre. Based on their salary values we can say that the spending scores of the customers in this group can't have that much grouth unless the prices are lowered to some extent."
-    colors = {0: 'Purple', 1: 'SkyBlue', 2: 'LightGreen', 3: 'Orange', 4: 'Red'}
-    if ok:
-        if len(annual_income)==0 or int(annual_income)<=0:
-            warning = '<p style="color:Red;">Please write an Annual income greater than 0</p>'
-            st.markdown(warning, unsafe_allow_html=True)
-        else:
-            point = np.array([int(annual_income), int(spending_score)])
-            point_id = predict_cluster_id(point, data, cluster_id)
-            result = '<h4>The estimated cluster for this customer is: </h4><h3 style="text-align: center; color:'+colors[point_id]+';">Cluster '+str(point_id)+'</h3>'
-            st.markdown(result, unsafe_allow_html=True)
-            st.write(text[point_id])
-            display_metrics_cluster(point_id, cluster_id, data)
-            note = '<p style="text-align: center; color:Grey";>The arrows display the distance from the average values of the dataset</p>'
-            st.markdown(note, unsafe_allow_html=True)
-        '''
     st.write(regions_top100)
     regions_per_lang_ = dict()
     for lang in regions_per_lang.keys():
@@ -162,3 +81,44 @@ def show_predict_page():
     col4.plotly_chart(display_scatter_polar(regions_per_lang_, 'topic', 'value', 'Geography.Regions comparison'))
     col5.plotly_chart(display_scatter_polar(regions_top100, 'topic', 'score', 'Geography.Regions comparison - Top 100 articles'))
         
+def plot_topics():
+    import plotly.graph_objects as go
+    import plotly.express as px
+    from plotly.subplots import make_subplots
+
+    # create a 5x2 subplot grid with pie subplots
+    #fig = make_subplots(rows=5, cols=2, specs=[[{'type':'pie'}]*2]*5)
+    fig = make_subplots(rows=5, cols=2, specs=[[{'type':'pie'}]*2]*5,
+                        vertical_spacing=0.01, horizontal_spacing=0.05,
+                        ) #subplot_titles=[f"Dataframe {i+1}" for i in range(10)],
+
+    # iterate over the list of dataframes and plot a pie chart for each one
+    for i, df in enumerate(list_of_dataframes):
+        # calculate the value counts for the 'topic' column
+        counts = df['topic'].value_counts()
+        dt = pd.DataFrame(df[['topic_level1', 'topic', 'topic_full']].value_counts()).reset_index().rename(columns={0: 'count'})
+        dt['lang']='  '#list_of_langs[i]
+        # create a pie chart with the value counts
+        pie = px.sunburst(dt, path=['lang', 'topic_level1', 'topic'], values='count')
+
+        # add the pie chart to the subplot grid
+        fig.add_trace(pie.data[0], row=i//2+1, col=i%2+1)#, text = lang_to_language[list_of_langs[i]])
+        #fig.update_traces(hole=.4, hoverinfo="label+percent+name")
+
+    # update the layout with title and axis labels
+    j_ = [0.915, 0.711, 0.50, 0.29, 0.09]
+    i_ = [0.22, 0.78]
+    fig.update_layout(
+        height=2000, width=1000,
+        title="Distribution of Topics",
+        uniformtext_minsize=12,
+        uniformtext_mode='hide',
+        annotations=[dict(text=lang, x=i_[i%2], y=j_[i//2], font_size=20, showarrow=False, align="center") for i,lang in enumerate(list_of_langs)]
+    )
+    #fig.update_traces(textposition='inside')
+    '''
+    fig.update_layout(
+        height=2000, width=1000,
+        title="Distribution of Topics")'''
+    # show the figure
+    st.plotly_chart(fig)
