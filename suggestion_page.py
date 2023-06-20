@@ -75,8 +75,7 @@ def show_suggestion_page():
             list_results = sorted(dict_results)
             show_suggestions(slider_val, list_results, dt, my_bar)
             image = Image.open('Confusion Matrix - '+ial_+'.png')
-
-        st.image(image, caption='Sunrise by the mountains')
+            st.image(image, caption='Sunrise by the mountains')
     #st.write("Outside the form")
 
 def views_next_days(title, time, wiki, days):
