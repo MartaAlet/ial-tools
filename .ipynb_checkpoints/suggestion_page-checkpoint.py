@@ -326,7 +326,6 @@ def get_input_data(lang, my_bar):
     return input_data
       
 def show_suggestions(slider_val, list_top, dt, my_bar):
-
     my_bar.progress(100)
     st.markdown("<h1 style='text-align: center; color: #307473;'>Results:</h1>", unsafe_allow_html=True)
     col0, col1, col2 = st.columns(3)
