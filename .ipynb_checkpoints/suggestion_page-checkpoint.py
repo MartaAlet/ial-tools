@@ -50,16 +50,19 @@ def show_suggestion_page():
         language_to_ial={'Simple English': 'simple', 'Esperanto':'eo', 'Ido':'io', 'Volapük':'io', 'Interlingua': 'ia', 'Interlingue':'ie', 'Novial':'nov'}
         ial = language_to_ial[ial_]
         if ial == 'nov':
-            st.write("Unfortunatelly, due to BLAH")
+            st.write("Unfortunatelly, due to a low rate of article creation we were not able to develop a system that can suggest articles for Novial. However we recommend looking at the [List of articles every Wikipedia should have](https://meta.wikimedia.org/wiki/List_of_articles_every_Wikipedia_should_have) for inspiration.")
         else:
             my_bar = st.progress(0)
+            model_ial = load_model('model_'+ial+'.pkl')
+            columns_d = model_ial.get_booster().feature_names
             input_data = get_input_data(ial, my_bar)
+            for col in columns_d:
+                if col not in list(input_data.columns):
+                    input_data[col]=np.nan
             print("Columns", input_data.columns)
             my_bar.progress(90)
-            model_ial = load_model('model_'+ial+'.pkl')
             dt = input_data[['Qid', 'title']]
-            input_data=input_data.drop(columns=['title'], axis = 1)
-            input_data=input_data.drop(columns=['Qid'], axis = 1)
+            input_data = input_data[columns_d]
             print("Columns", input_data.columns)
             list_of_langs = ['en', 'es', 'ca', 'simple', 'eo', 'io', 'ia', 'vo', 'ie', 'nov']
             for l in list_of_langs:
@@ -70,12 +73,17 @@ def show_suggestion_page():
             y_pred = model_ial.predict(input_data)
             l = len(dt)
             results = [row for i, row in dt.iterrows() if y_pred[i]==1]
-            probs = model.predict_proba(X_test)
-            dict_results = [{i:list(probs[i])[1]} for i in range(len(X_test)) if y_pred[i]==1]
+            probs = model_ial.predict_proba(input_data)
+            dict_results = {i:list(probs[i])[1] for i in range(len(input_data)) if y_pred[i]==1}
+            print(dict_results)
             list_results = sorted(dict_results)
+            print(list_results)
             show_suggestions(slider_val, list_results, dt, my_bar)
             image = Image.open('Confusion Matrix - '+ial_+'.png')
-            st.image(image, caption='Sunrise by the mountains')
+            st.write("""## Characteristics of the model that classifies articles based on popularity:""")
+            #col1, col2, col3 = st.columns(3)
+            st.image(image, caption='Confusion Matrix of the model used for suggesting articles for '+ial_, width=800)
+            
     #st.write("Outside the form")
 
 def views_next_days(title, time, wiki, days):
@@ -243,7 +251,7 @@ def get_top_articles(lang1, lang2):
                 top_articles.append(article_title)
                 count += 1
 
-                if count == 60:
+                if count == 100:
                     break
     print(len(top_articles))
     return top_articles
@@ -302,7 +310,7 @@ def get_input_data(lang, my_bar):
                     #df2 = df2.append(, ignore_index = True)
                     row = {'Qid' : article['qid'], 'views_mean_'+lang2 : mean_, 'views_median_'+lang2 : median_, 'views_sum_'+lang2:sum_, 'views_peak_'+lang2:peak, 'is_top_'+lang2:b}
                     df1 = pd.DataFrame([row])
-                    df2 = pd.concat(df2, df1, axis=0)
+                    df2 = pd.concat([df2, df1], axis=0)
         else:
             for article in top100:
                 qid = get_wikipedia_qid(article, lang2)
@@ -320,22 +328,28 @@ def get_input_data(lang, my_bar):
                     row = {**row, **topics}
                     df1 = pd.DataFrame([row])
                     #df2 = df2.append(row, ignore_index = True)
-                    df2 = pd.concat(df2, df1, axis=0)
+                    df2 = pd.concat([df2, df1], axis=0)
 
         print(input_data.head())
         print(df2.head())
-        input_data = pd.merge(input_data, df2, on='Qid', how='outer')
+        if 'Qid' in list(df2.columns):
+            input_data = pd.merge(input_data, df2, on='Qid', how='outer')
         percentage+=10
+        print(input_data.head())
     return input_data
       
 def show_suggestions(slider_val, list_top, dt, my_bar):
     my_bar.progress(100)
     st.markdown("<h1 style='text-align: center; color: #307473;'>Results:</h1>", unsafe_allow_html=True)
-    col0, col1, col2 = st.columns(3)
-    for i in range(slider_val):
+    #col0, col1, col2 = st.columns(3)
+    size = len(list_top)
+    if slider_val<size:
+        size = slider_val
+    for i in range(size):
         qid = dt.iloc[list_top[i]]['Qid']
         title = dt.iloc[list_top[i]]['title']
-        col1.write(f"## {title} - [{qid}](https://www.wikidata.org/wiki/{qid})")
+        st.markdown(f"<h3 style='text-align: center;'>{title} - <a href='https://www.wikidata.org/wiki/{qid}'>{qid}</a></h3>", unsafe_allow_html=True)
+        #col1.write(f"## {title} - [{qid}](https://www.wikidata.org/wiki/{qid})")
     #col1.write("## [Dog](https://en.wikipedia.org/wiki/Dog) - 8k views")
     #col1.write("## [United States](https://en.wikipedia.org/wiki/United_States) - 7k views")
     #col1.write("## [Lady Gaga](https://en.wikipedia.org/wiki/Lady_Gaga) - 6k views")

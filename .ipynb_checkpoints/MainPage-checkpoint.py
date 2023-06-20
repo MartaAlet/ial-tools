@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.cluster import AgglomerativeClustering
 import plotly.express as px
+from PIL import Image
 
 #@st.cache(suppress_st_warning=True)
 
@@ -27,7 +28,7 @@ def show_main_page():
         </style>
 
         <div class="footer">
-          <p>Developed by <a style='display: block; text-align: center;' href="https://www.mediawiki.org/w/index.php?title=User:MartaAlet" target="_blank">Marta Alet Puig</a></p>
+          <p style='text-align: center;'>Developed by <a href="https://www.mediawiki.org/w/index.php?title=User:MartaAlet">Marta Alet Puig</a></p>
         </div>
         """,
         unsafe_allow_html=True
