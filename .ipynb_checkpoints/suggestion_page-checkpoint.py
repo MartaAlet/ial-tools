@@ -47,7 +47,7 @@ def show_suggestion_page():
          #   st.write("slider", slider_val, "checkbox", checkbox_val)
             
     if submitted:
-        language_to_ial={'Simple English': 'simple', 'Esperanto':'eo', 'Ido':'io', 'Volapük':'io', 'Interlingua': 'ia', 'Interlingue':'ie', 'Novial':'nov'}
+        language_to_ial={'Simple English': 'simple', 'Esperanto':'eo', 'Ido':'io', 'Volapük':'vo', 'Interlingua': 'ia', 'Interlingue':'ie', 'Novial':'nov'}
         ial = language_to_ial[ial_]
         if ial == 'nov':
             st.write("Unfortunatelly, due to a low rate of article creation we were not able to develop a system that can suggest articles for Novial. However we recommend looking at the [List of articles every Wikipedia should have](https://meta.wikimedia.org/wiki/List_of_articles_every_Wikipedia_should_have) for inspiration.")
@@ -79,6 +79,8 @@ def show_suggestion_page():
             list_results = sorted(dict_results)
             print(list_results)
             show_suggestions(slider_val, list_results, dt, my_bar)
+            if ial_= 'Volapük':
+                ial_ = 'Volapuk'
             image = Image.open('Confusion Matrix - '+ial_+'.png')
             st.write("""## Characteristics of the model that classifies articles based on popularity:""")
             #col1, col2, col3 = st.columns(3)
