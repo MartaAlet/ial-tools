@@ -316,7 +316,8 @@ def get_input_data(lang, my_bar):
                     print(topics)
                     row = {'Qid' : qid, 'title': article, 'views_mean_'+lang2 : mean_, 'views_median_'+lang2 : median_, 'views_sum_'+lang2:sum_, 'views_peak_'+lang2:peak, 'is_top_'+lang2:b}
                     row = {**row, **topics}
-                    df2 = df2.append(row, ignore_index = True)
+                    #df2 = df2.append(row, ignore_index = True)
+                    df2 = pd.concat(df2, row, axis=0)
 
         print(input_data.head())
         print(df2.head())
