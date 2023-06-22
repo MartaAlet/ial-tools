@@ -8,6 +8,9 @@ import plotly
 import plotly.graph_objects as go
 import plotly.offline as pyo
 import json
+import sys
+
+
 
 '''
 def load_dict(dict_name):
@@ -61,6 +64,7 @@ def rename_col_3(col_name):
 
 def show_predict_page():
     st.markdown("<h1 style='text-align: center; color: #307473;'>Topic comparison among IALs</h1>", unsafe_allow_html=True)
+    st.write(sys.version)
     #st.write("check out this [link](https://share.streamlit.io/mesmith027/streamlit_webapps/main/MC_pi/streamlit_app.py)")
     st.write("Using the [Language-agnostic Topic Classification API](https://wiki-topic.toolforge.org/topic) developed by Isaac (WMF) as part of Wikimedia Research, we can view the distribution of topics of the articles of each of the pages. If we give the API the wikipedia’s language and an article title we will get for each of the topics in this page the probability that the article belongs to that topic.")
     st.markdown("<h3 style='text-align: left; color: #307473;'>Topics of articles for each IAL:</h3>", unsafe_allow_html=True)
