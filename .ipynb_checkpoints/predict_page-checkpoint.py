@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import plotly
 import plotly.graph_objects as go
 import plotly.offline as pyo
+import json
 
 '''
 def load_dict(dict_name):
@@ -63,6 +64,10 @@ def show_predict_page():
     #st.write("check out this [link](https://share.streamlit.io/mesmith027/streamlit_webapps/main/MC_pi/streamlit_app.py)")
     st.write("Using the [Language-agnostic Topic Classification API](https://wiki-topic.toolforge.org/topic) developed by Isaac (WMF) as part of Wikimedia Research, we can view the distribution of topics of the articles of each of the pages. If we give the API the wikipedia’s language and an article title we will get for each of the topics in this page the probability that the article belongs to that topic.")
     st.markdown("<h3 style='text-align: left; color: #307473;'>Topics of articles for each IAL:</h3>", unsafe_allow_html=True)
+    '''with open('figure_topics.json', 'r') as f:
+        v = json.loads(f.read())
+    fig = go.Figure(data=v['data'], layout=v['layout'])
+    st.plotly_chart(fig)'''
     col0, col1 = st.columns(2)
     col0.plotly_chart(display_scatter_polar(topics, 'topic', 'value', 'Topics comparison'))
     col1.plotly_chart(display_scatter_polar(topics_langs_relevant100, 'topic', 'score', 'Topics comparison - Top 100 articles'))
@@ -72,7 +77,7 @@ def show_predict_page():
     col2.plotly_chart(display_scatter_polar(topics_minus_geo, 'topic', 'value', 'Topics comparison (Without Geography.Regions)'))
     col3.plotly_chart(display_scatter_polar(topics_minus_geo_top100, 'topic', 'score', 'Topics comparison (Without Geography.Regions) - Top 100 articles'))
     st.markdown("<h3 style='text-align: left; color: #307473;'>Regions of articles for each IAL:</h3>", unsafe_allow_html=True)
-    st.write(regions_top100)
+    #st.write(regions_top100)
     regions_per_lang_ = dict()
     for lang in regions_per_lang.keys():
         regions_per_lang_[lang]= pd.DataFrame({'topic':regions_per_lang[lang].index, 'value':regions_per_lang[lang].values})

@@ -16,6 +16,7 @@ from collections.abc import Mapping
 import pageviewapi
 import datetime
 from PIL import Image
+import xgboost as xgb
 
 @st.cache
 def load_data(file_name):
@@ -50,11 +51,16 @@ def show_suggestion_page():
         language_to_ial={'Simple English': 'simple', 'Esperanto':'eo', 'Ido':'io', 'Volapük':'vo', 'Interlingua': 'ia', 'Interlingue':'ie', 'Novial':'nov'}
         ial = language_to_ial[ial_]
         if ial == 'nov':
-            st.write("Unfortunatelly, due to a low rate of article creation we were not able to develop a system that can suggest articles for Novial. However we recommend looking at the [List of articles every Wikipedia should have](https://meta.wikimedia.org/wiki/List_of_articles_every_Wikipedia_should_have) for inspiration.")
+            st.write("Unfortunatelly, due to a low rate of article creation we were not able to develop a system that can suggest articles for Novial. However, we recommend looking at the [List of articles every Wikipedia should have](https://meta.wikimedia.org/wiki/List_of_articles_every_Wikipedia_should_have) for inspiration.")
         else:
             my_bar = st.progress(0)
-            model_ial = load_model('model_'+ial+'.pkl')
-            columns_d = model_ial.get_booster().feature_names
+            model_ial = XGBClassifier()
+            model_ial_2 = xgb.Booster()
+            model_ial.load_model('model_'+ial+".json")
+            model_ial_2.load_model('model_'+ial+".json")
+            #model_ial = .load_model("model.json")
+            #model_ial = load_model('model_'+ial+'.pkl')
+            columns_d = model_ial_2.feature_names
             input_data = get_input_data(ial, my_bar)
             for col in columns_d:
                 if col not in list(input_data.columns):
@@ -70,6 +76,7 @@ def show_suggestion_page():
                     continue
                 input_data['is_top_'+l] = input_data['is_top_'+l].fillna(False)
             input_data = input_data.fillna(-1.0)
+            #i_data = xgb.DMatrix(input_data)
             y_pred = model_ial.predict(input_data)
             l = len(dt)
             results = [row for i, row in dt.iterrows() if y_pred[i]==1]
@@ -79,7 +86,7 @@ def show_suggestion_page():
             list_results = sorted(dict_results)
             print(list_results)
             show_suggestions(slider_val, list_results, dt, my_bar)
-            if ial_= 'Volapük':
+            if ial_== 'Volapük':
                 ial_ = 'Volapuk'
             image = Image.open('Confusion Matrix - '+ial_+'.png')
             st.write("""## Characteristics of the model that classifies articles based on popularity:""")
@@ -253,7 +260,7 @@ def get_top_articles(lang1, lang2):
                 top_articles.append(article_title)
                 count += 1
 
-                if count == 100:
+                if count == 200:
                     break
     print(len(top_articles))
     return top_articles
