@@ -83,7 +83,7 @@ def show_suggestion_page():
             probs = model_ial.predict_proba(input_data)
             dict_results = {i:list(probs[i])[1] for i in range(len(input_data)) if y_pred[i]==1}
             print(dict_results)
-            list_results = sorted(dict_results)
+            list_results = [y[0] for y in sorted(dict_results.items(), key=lambda x:x[1],  reverse=True)]
             print(list_results)
             show_suggestions(slider_val, list_results, dt, my_bar)
             if ial_== 'Volapük':
@@ -358,6 +358,8 @@ def show_suggestions(slider_val, list_top, dt, my_bar):
         qid = dt.iloc[list_top[i]]['Qid']
         title = dt.iloc[list_top[i]]['title']
         st.markdown(f"<h3 style='text-align: center;'>{title} - <a href='https://www.wikidata.org/wiki/{qid}'>{qid}</a></h3>", unsafe_allow_html=True)
+    if slider_val>size:
+        st.write(f"Unfortunately, the model predicted less than {slider_val} from the current popular articles would be popular in the target IAL. If you want more suggestions we recommend looking at the [List of articles every Wikipedia should have](https://meta.wikimedia.org/wiki/List_of_articles_every_Wikipedia_should_have) for inspiration.")
         #col1.write(f"## {title} - [{qid}](https://www.wikidata.org/wiki/{qid})")
     #col1.write("## [Dog](https://en.wikipedia.org/wiki/Dog) - 8k views")
     #col1.write("## [United States](https://en.wikipedia.org/wiki/United_States) - 7k views")
