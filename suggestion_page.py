@@ -310,16 +310,18 @@ def get_input_data(lang, my_bar):
                 if article['qid']==None:
                     continue
                 #get views first month
-                timestamp = ''.join(get_article_creation_date(lang2, article['title']).split('-'))
-                if timestamp:
-                    views = views_next_days(article['title'],  timestamp, lang2, 30)
-                    print(article['title'],  timestamp, lang2, views)
-                    mean_, median_, sum_, peak = compute_features_views(views)
-                    b = sum_>=threshold[lang2]
-                    #df2 = df2.append(, ignore_index = True)
-                    row = {'Qid' : article['qid'], 'views_mean_'+lang2 : mean_, 'views_median_'+lang2 : median_, 'views_sum_'+lang2:sum_, 'views_peak_'+lang2:peak, 'is_top_'+lang2:b}
-                    df1 = pd.DataFrame([row])
-                    df2 = pd.concat([df2, df1], axis=0)
+                creation_date = get_article_creation_date(lang2, article['title'])
+                if type(creation_date) == str:
+                    timestamp = ''.join(creation_date.split('-'))
+                    if timestamp:
+                        views = views_next_days(article['title'],  timestamp, lang2, 30)
+                        print(article['title'],  timestamp, lang2, views)
+                        mean_, median_, sum_, peak = compute_features_views(views)
+                        b = sum_>=threshold[lang2]
+                        #df2 = df2.append(, ignore_index = True)
+                        row = {'Qid' : article['qid'], 'views_mean_'+lang2 : mean_, 'views_median_'+lang2 : median_, 'views_sum_'+lang2:sum_, 'views_peak_'+lang2:peak, 'is_top_'+lang2:b}
+                        df1 = pd.DataFrame([row])
+                        df2 = pd.concat([df2, df1], axis=0)
         else:
             for article in top100:
                 qid = get_wikipedia_qid(article, lang2)
