@@ -12,9 +12,9 @@ if page == "Topic Comparison":
     show_predict_page()
 elif page == "Quality Comparison":
     show_explore_page()
-'''elif page == "Suggestion Page":
-    show_suggestion_page()'''
 elif page == "Main Page":
     show_main_page()
 else:
     show_worldviews_page()
+'''elif page == "Suggestion Page":
+    show_suggestion_page()'''
