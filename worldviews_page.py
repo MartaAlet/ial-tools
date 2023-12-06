@@ -28,6 +28,6 @@ def show_worldviews_page():
     for lang in list_of_langs:
         language = lang_to_language[lang]
         fig = px.choropleth(views_per_country_df[lang], locations="Alpha-3 code", color="Views/Population", hover_name="Country", color_continuous_scale=px.colors.sequential.Plasma, title = "Views/Population per country of the "+language+" Wikipedia",  hover_data=['views_ceil'])
-        fig.update_layout(title=dict(font=dict(size=20)), title_y=0.76, paper_bgcolor='white', plot_bgcolor='white')
+        #fig.update_layout(title=dict(font=dict(size=20)), paper_bgcolor='white', plot_bgcolor='white')
         st.plotly_chart(fig)
         
