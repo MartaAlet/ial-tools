@@ -1,10 +1,10 @@
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.cluster import AgglomerativeClustering
-import plotly.express as px
-from PIL import Image
+#import pandas as pd
+#import matplotlib.pyplot as plt
+#import seaborn as sns
+#from sklearn.cluster import AgglomerativeClustering
+#import plotly.express as px
+#from PIL import Image
 
 #@st.cache(suppress_st_warning=True)
 

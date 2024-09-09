@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.cluster import AgglomerativeClustering
 import plotly.express as px
-import pypopulation
-import pickle
+#import pypopulation
+#import pickle
 
 @st.cache
 def load_data(file_name):

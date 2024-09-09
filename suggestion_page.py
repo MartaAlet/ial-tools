@@ -5,7 +5,6 @@ import seaborn as sns
 from sklearn.cluster import AgglomerativeClustering
 import plotly.express as px
 import numpy as np
-import pageviewapi
 import time
 from xgboost.sklearn import XGBClassifier
 import requests
@@ -13,6 +12,10 @@ import json
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from collections.abc import Mapping
+import collections
+import collections.abc
+for type_name in collections.abc.__all__:
+    setattr(collections, type_name, getattr(collections.abc, type_name))
 import pageviewapi
 import datetime
 from PIL import Image
