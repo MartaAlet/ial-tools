@@ -2,6 +2,7 @@ streamlit==1.18.0
 protobuf~=3.19.0
 scikit-learn
 matplotlib
+numpy==1.26.4
 seaborn
 plotly
 pandas == 2.0
