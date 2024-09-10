@@ -186,13 +186,25 @@ def exists(article_title, lang1, lang2):
         return False
     
 def get_topics(title, lang):
-    url = f"https://wikipedia-topic.wmcloud.org/api/v1/topic?threshold=0.5&lang={lang}&title={title}"
-    response = requests.get(url)
+    #url = f"https://wikipedia-topic.wmcloud.org/api/v1/topic?threshold=0.5&lang={lang}&title={title}"
+    #response = requests.get(url)
+
+    url = "https://api.wikimedia.org/service/lw/inference/v1/models/outlink-topic-model:predict"
+
+    # Define the JSON payload (data)
+    data = {
+        "page_title": title,
+        "lang": lang,
+        "threshold": 0.5
+    }
+
+    # Send the POST request
+    response = requests.post(url, json=data)
 
     try:
         response.raise_for_status()
         data = response.json()
-        topics = data['results']
+        topics = data['prediction']['results']
         dict_ = {'topic_Culture': 0, 'topic_STEM': 0, 'topic_History_and_Society': 0, 'topic_Geography': 0}
         topics = set(x['topic'] for x in topics)
         for topic in topics:
@@ -297,13 +309,13 @@ def get_input_data(lang, my_bar):
     print(input_data.head())
     #get current month
     #get top100 articles in jacsim[lang]
-    my_bar.progress(0)
+    my_bar.progress(0, "Search in progress, this may take a few minutes (~5)")
     top100 = get_top_articles(jacsim[lang], lang)
     print(top100)
     percentage = 1
     for lang2 in list_of_langs:
         time.sleep(3)
-        my_bar.progress(percentage)
+        my_bar.progress(percentage, "Finding articles in other languages...")
         if lang2 == lang or lang2 == 'nov':
             continue
         top_ = get_titles_in_other_lang(top100, jacsim[lang], lang2)
